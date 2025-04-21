@@ -1,0 +1,76 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		 x:Class="Diplom2.Osnova"
+        Title="Osnova"
+		x:CompileBindings="False"
+		xmlns:local="using:Diplom2"
+		WindowStartupLocation="CenterScreen"
+		>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" MaxWidth="300"/>
+			<ColumnDefinition Width="3*"/>
+		</Grid.ColumnDefinitions>
+
+	
+		<local:NavigationPanel Grid.Column="0" x:Name="NavigationPanel"/>
+
+	
+		<Grid Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="4*"/>
+			</Grid.RowDefinitions>
+
+			<StackPanel Orientation="Horizontal" Margin="20" Grid.Row="0" VerticalAlignment="Center">
+				<Button Content="Добавить клиента" Margin="0,0,10,0" Click="AddClient_Click"/>
+				<Button Content="Добавить бронь" Margin="0,0,10,0" Click="AddBooking_Click"/>
+				<TextBlock Text="Свободных номеров: 5" VerticalAlignment="Center" x:Name="FreeRoomsCount"/>
+			</StackPanel>
+
+	
+			<Grid Grid.Row="1" Margin="20">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="5*"/>
+				</Grid.RowDefinitions>
+
+			
+				<StackPanel Orientation="Horizontal" Margin="0,0,0,10" Grid.Row="0" VerticalAlignment="Center">
+					<TextBox Watermark="Поиск..." Width="200" Margin="0,0,10,0" TextChanged="SearchTextChanged" x:Name="SearchBox"/>
+					<ComboBox Width="150" SelectionChanged="SortSelectionChanged" x:Name="SortComboBox">
+						<ComboBoxItem>Сортировка: по имени</ComboBoxItem>
+						<ComboBoxItem>Сортировка: по статусу</ComboBoxItem>
+					</ComboBox>
+				</StackPanel>
+
+		
+				<ListBox Grid.Row="1" x:Name="ClientsList">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="*"/>
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="{Binding Name}" Grid.Column="0"/>
+								<TextBlock Text="{Binding RoomNumber}" Grid.Column="1"/>
+								<TextBlock Text="{Binding Phone}" Grid.Column="2"/>
+								<TextBlock Text="{Binding Email}" Grid.Column="3"/>
+								<Border Background="{Binding StatusColor}" CornerRadius="5" Padding="5" Grid.Column="4">
+									<TextBlock Text="{Binding Status}" Foreground="White"/>
+								</Border>
+							</Grid>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+			</Grid>
+		</Grid>
+	</Grid>
+</Window>

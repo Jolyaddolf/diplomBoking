@@ -1,0 +1,55 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="using:Diplom2"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+        x:Class="Diplom2.CalendarWindow"
+        Title="Календарь бронирования"
+		x:CompileBindings="False"
+		WindowStartupLocation="CenterScreen"
+		>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" MaxWidth="300"/>
+			<ColumnDefinition Width="3*"/>
+		</Grid.ColumnDefinitions>
+
+
+		<local:NavigationPanel Grid.Column="0" Name="NavigationPanel"/>
+
+
+		<Grid Grid.Column="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="2*"/>
+				<ColumnDefinition Width="3*"/>
+			</Grid.ColumnDefinitions>
+
+			<Calendar Grid.Column="0" Margin="20" SelectionMode="SingleDate" SelectedDatesChanged="CalendarDateChanged"/>
+
+			<Grid Grid.Column="1" Margin="20">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+				<TextBlock Text="Статус номеров на выбранную дату" FontSize="16" Margin="0,0,0,10"/>
+				<ListBox Grid.Row="1" Name="RoomsList">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="*"/>
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="{Binding Roomnumber}" Grid.Column="0"/>
+								<Border Background="{Binding Statuscolor}" CornerRadius="5" Padding="5" Grid.Column="1">
+									<TextBlock Text="{Binding Status}" Foreground="White"/>
+								</Border>
+							</Grid>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+			</Grid>
+		</Grid>
+	</Grid>
+</Window>

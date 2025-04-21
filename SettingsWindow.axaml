@@ -1,0 +1,46 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="diplom2.SettingsWindow"
+        Title="SettingsWindow"
+		xmlns:local="using:Diplom2"
+		WindowStartupLocation="CenterScreen"
+		>
+	<Grid ColumnDefinitions="*,*">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<local:NavigationPanel Grid.Column="0" x:Name="NavigationPanel"/>
+		<TabControl Grid.Column="1" Grid.Row="0">
+			<TabItem Header="Общие">
+				<StackPanel Margin="10">
+					<TextBlock Text="Тема интерфейса:"/>
+					<ComboBox SelectedIndex="0">
+						<ComboBoxItem>Светлая</ComboBoxItem>
+						<ComboBoxItem>Темная</ComboBoxItem>
+					</ComboBox>
+				</StackPanel>
+			</TabItem>
+			<TabItem Header="База данных">
+				<StackPanel Margin="10">
+					<TextBlock Text="Хост:"/>
+					<TextBox Name="HostTextBox" Watermark="localhost"/>
+					<TextBlock Text="Порт:"/>
+					<TextBox Name="PortTextBox" Watermark="5432"/>
+					<TextBlock Text="Имя базы данных:"/>
+					<TextBox Name="DatabaseTextBox" Watermark="postgres"/>
+					<TextBlock Text="Имя пользователя:"/>
+					<TextBox Name="UsernameTextBox" Watermark="postgres"/>
+					<TextBlock Text="Пароль:"/>
+					<TextBox Name="PasswordTextBox" Watermark="Пароль" PasswordChar="*"/>
+					<Button Content="Проверить подключение" Margin="0,10,0,0" Name="CheckConnection_Click"/>
+				</StackPanel>
+			</TabItem>
+		</TabControl>
+		<Button Content="Сохранить" Grid.Row="1" HorizontalAlignment="Right" Margin="10" Name="SaveSettings_Click"/>
+	</Grid>
+</Window>

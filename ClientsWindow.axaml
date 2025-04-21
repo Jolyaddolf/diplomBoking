@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="using:Diplom2"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+        x:Class="Diplom2.ClientsWindow"
+        Title="Управление клиентами"
+		x:CompileBindings="False"
+		WindowStartupLocation="CenterScreen"
+		>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" MaxWidth="300"/>
+			<ColumnDefinition Width="3*"/>
+		</Grid.ColumnDefinitions>
+
+		<local:NavigationPanel Grid.Column="0" Name="NavigationPanel"/>
+
+	
+		<Grid Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+		
+			<StackPanel Orientation="Horizontal" Margin="20" Grid.Row="0" VerticalAlignment="Center">
+				<Button Content="Добавить клиента" Margin="0,0,10,0" Name="AddClientClic"/>
+				<TextBox Watermark="Поиск по имени..." Width="200" Margin="0,0,10,0" TextChanged="SearchTextChanged" Name="SearchBox"/>
+				<ComboBox Width="150" SelectionChanged="SortSelectionChanged" Name="SortComboBox">
+					<ComboBoxItem>Сортировка: по имени (А-Я)</ComboBoxItem>
+					<ComboBoxItem>Сортировка: по имени (Я-А)</ComboBoxItem>
+					<ComboBoxItem>Сортировка: по дате регистрации</ComboBoxItem>
+				</ComboBox>
+			</StackPanel>
+
+
+			<ListBox Grid.Row="1" Margin="20" Name="ClientsList">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+							</Grid.ColumnDefinitions>
+							<TextBlock Text="{Binding Name}" Grid.Column="0"/>
+							<TextBlock Text="{Binding Phone}" Grid.Column="1"/>
+							<TextBlock Text="{Binding Email}" Grid.Column="2"/>
+							<TextBlock Text="{Binding RegistrationDate, StringFormat='dd.MM.yyyy'}" Grid.Column="3"/>
+							<Border Background="{Binding StatusColor}" CornerRadius="5" Padding="5" Grid.Column="4">
+								<TextBlock Text="{Binding Status}" Foreground="White"/>
+							</Border>
+						</Grid>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</Grid>
+	</Grid>
+</Window>

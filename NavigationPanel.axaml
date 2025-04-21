@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Diplom2.NavigationPanel"
+			 >
+	<Grid Background="White">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<TextBlock Text="YourReserV" FontSize="24" Margin="20,20,0,20" Grid.Row="0"/>
+		<StackPanel Grid.Row="1" Margin="20,0">
+			<Border Background="Purple" CornerRadius="5" Margin="0,0,0,10" Padding="10">
+				<Button Content="Главная" Click="NavigateToMain" Foreground="White" Background="Transparent" BorderThickness="0"/>
+			</Border>
+			<Border Background="Purple" CornerRadius="5" Margin="0,0,0,10" Padding="10">
+				<Button Content="Календарь бронирования" Click="NavigateToCalendar" Foreground="White" Background="Transparent" BorderThickness="0"/>
+			</Border>
+			<Border Background="Purple" CornerRadius="5" Margin="0,0,0,10" Padding="10">
+				<Button Content="Управление клиентами" Click="NavigateToClients" Foreground="White" Background="Transparent" BorderThickness="0"/>
+			</Border>
+			<Border Background="Purple" CornerRadius="5" Margin="0,0,0,10" Padding="10">
+				<Button Content="Настройки системы" Click="NavigateToSettings" Foreground="White" Background="Transparent" BorderThickness="0"/>
+			</Border>
+		</StackPanel>
+	</Grid>
+</UserControl>
