@@ -1,56 +1,42 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using diplom2;
-using diplom2;
+using Diplom2.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Diplom2
 {
     public partial class CalendarWindow : Window
     {
+        private List<Room> _rooms;
+
         public CalendarWindow()
         {
             InitializeComponent();
-            var navPanel = this.FindControl<NavigationPanel>("NavigationPanel");
-            navPanel.NavigationRequested += HandleNavigation;
+            LoadRooms();
         }
 
-        private void HandleNavigation(object sender, string destination)
+        public void LoadRooms()
         {
-            Window newWindow = destination switch
-            {
-                "Main" => new Osnova(),
-                "Clients" => new ClientsWindow(),
-                "Settings" => new SettingsWindow(),
-                _ => null
-            };
-
-            if (newWindow != null)
-            {
-                newWindow.Show();
-                this.Close();
-            }
+            _rooms = Helper.Database.Rooms.ToList();
+            RoomsList.ItemsSource = _rooms;
         }
 
-        private void CalendarDateChanged(object sender, SelectionChangedEventArgs e)
+        private void RoomsList_DoubleTapped(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            var calendar = sender as Calendar;
-            if (calendar.SelectedDate.HasValue)
+            if (RoomsList.SelectedItem is Room selectedRoom)
             {
-                var selectedDate = calendar.SelectedDate.Value;
-                var rooms = Helper.Database.Rooms.ToList();
-                var bookings = Helper.Database.Bookings
-                    .Where(b => b.Startdate <= selectedDate && b.Enddate >= selectedDate)
-                    .ToList();
-
-                var roomStatuses = rooms.Select(r => new 
-                {
-                    RoomNumber = r.Roomnumber,
-                    Status = bookings.Any(b => b.Roomid == r.Id) ? "�����" : "��������"
-                }).ToList();
-
-                RoomsList.ItemsSource = roomStatuses; 
+                var booking = Helper.Database.Bookings
+                    .Where(b => b.RoomId == selectedRoom.Id && b.EndDate > DateTime.Now && b.Status == "подтверждено")
+                    .OrderByDescending(b => b.EndDate)
+                    .FirstOrDefault();
+                string info = booking != null
+                    ? $"Занят клиентом: {Helper.Database.Clients.First(c => c.Id == booking.ClientId).Name}\nДо: {booking.EndDate}"
+                    : "Свободен";
+               // var roomInfoWindow = new RoomInfoWindow(selectedRoom, info);
+               // roomInfoWindow.Show();
             }
         }
     }

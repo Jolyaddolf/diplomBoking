@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using diplom2;
-using diplom2;
 using Diplom2.Models;
 using System;
 using System.Collections.Generic;
@@ -12,25 +11,28 @@ namespace Diplom2
     public partial class Osnova : Window
     {
         private List<Client> _clients;
+        private List<Room> _rooms;
 
         public Osnova()
         {
             InitializeComponent();
+            LoadClients();
+            LoadRooms();
+            ClientsList.DoubleTapped += ClientsList_DoubleTapped;
+
+            // –ü–æ–¥–ø–∏—Å—ã–≤–∞–µ–º—Å—è –Ω–∞ —Å–æ–±—ã—Ç–∏—è –Ω–∞–≤–∏–≥–∞—Ü–∏–æ–Ω–Ω–æ–π –ø–∞–Ω–µ–ª–∏
             var navPanel = this.FindControl<NavigationPanel>("NavigationPanel");
             if (navPanel != null)
             {
                 navPanel.NavigationRequested += HandleNavigation;
             }
-
-            LoadClients();
-            UpdateFreeRoomsCount();
         }
 
         private void HandleNavigation(object sender, string destination)
         {
             Window newWindow = destination switch
             {
-              "Calendar" => new CalendarWindow(),
+                "Calendar" => new CalendarWindow(),
                 "Clients" => new ClientsWindow(),
                 "Settings" => new SettingsWindow(),
                 _ => null
@@ -43,53 +45,55 @@ namespace Diplom2
             }
         }
 
-        private void LoadClients()
+        public void LoadClients()
         {
             _clients = Helper.Database.Clients.ToList();
             ClientsList.ItemsSource = _clients;
         }
 
-        private void UpdateFreeRoomsCount()
+        public void LoadRooms()
         {
-            var freeRooms = Helper.Database.Rooms.Count(r => r.Status == "—‚Ó·Ó‰ÂÌ");
-            FreeRoomsCount.Text = $"—‚Ó·Ó‰Ì˚ı ÌÓÏÂÓ‚: {freeRooms}";
+            _rooms = Helper.Database.Rooms.ToList();
+            RoomsList.ItemsSource = _rooms;
         }
 
         private void AddClient_Click(object sender, RoutedEventArgs e)
         {
-            var newClient = new Client
-            {
-                Name = "ÕÓ‚˚È  ÎËÂÌÚ",
-                Phone = "+7 000 000-00-00",
-                Email = "new@example.com",
-                Registrationdate = DateTime.Now,
-                Status = "¿ÍÚË‚ÂÌ"
-            };
-            Helper.Database.Clients.Add(newClient);
-            Helper.Database.SaveChanges();
-            LoadClients();
+            var addClientWindow = new AddClientWindow(this);
+            addClientWindow.Show();
         }
 
         private void AddBooking_Click(object sender, RoutedEventArgs e)
         {
-            // ÀÓ„ËÍ‡ ‰Ó·‡‚ÎÂÌËˇ ·ÓÌË
-        }
-
-        private void SearchTextChanged(object sender, TextChangedEventArgs e)
-        {
-            string searchText = SearchBox.Text?.ToLower() ?? "";
-            ClientsList.ItemsSource = _clients.Where(c => c.Name.ToLower().Contains(searchText)).ToList();
-        }
-
-        private void SortSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (SortComboBox.SelectedIndex == 0) // œÓ ËÏÂÌË
+            if (ClientsList.SelectedItem is Client selectedClient)
             {
-                ClientsList.ItemsSource = _clients.OrderBy(c => c.Name).ToList();
+                var addBookingWindow = new AddBookingWindow(this, selectedClient);
+                addBookingWindow.Show();
             }
-            else if (SortComboBox.SelectedIndex == 1) // œÓ ÒÚ‡ÚÛÒÛ
+        }
+
+        private void RoomsList_DoubleTapped(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            if (RoomsList.SelectedItem is Room selectedRoom)
             {
-                ClientsList.ItemsSource = _clients.OrderBy(c => c.Status).ToList();
+                var booking = Helper.Database.Bookings
+                    .Where(b => b.RoomId == selectedRoom.Id && b.EndDate > DateTime.Now && b.Status == "–ø–æ–¥—Ç–≤–µ—Ä–∂–¥–µ–Ω–æ")
+                    .OrderByDescending(b => b.EndDate)
+                    .FirstOrDefault();
+                string info = booking != null
+                    ? $"–ó–∞–Ω—è—Ç –∫–ª–∏–µ–Ω—Ç–æ–º: {Helper.Database.Clients.First(c => c.Id == booking.ClientId).Name}\n–î–æ: {booking.EndDate}"
+                    : "–°–≤–æ–±–æ–¥–µ–Ω";
+              //  var roomInfoWindow = new RoomInfoWindow(selectedRoom, info);
+              //  roomInfoWindow.Show();
+            }
+        }
+
+        private void ClientsList_DoubleTapped(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            if (ClientsList.SelectedItem is Client selectedClient)
+            {
+                var editClientWindow = new AddClientWindow(this, selectedClient);
+                editClientWindow.Show();
             }
         }
     }

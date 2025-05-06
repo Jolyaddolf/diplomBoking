@@ -21,6 +21,7 @@ namespace Diplom2
             }
 
             LoadClients();
+            ClientsList.DoubleTapped += ClientsList_DoubleTapped;
         }
 
         private void HandleNavigation(object sender, string destination)
@@ -29,7 +30,7 @@ namespace Diplom2
             {
                 "Calendar" => new CalendarWindow(),
                 "Main" => new Osnova(),
-                "Settings" => new (),
+                "Settings" => new SettingsWindow(),
                 _ => null
             };
 
@@ -48,23 +49,26 @@ namespace Diplom2
 
         private void AddClient_Click(object sender, RoutedEventArgs e)
         {
-            // Открываем новое окно для добавления клиента
             var addClientWindow = new AddClientWindow(this);
             addClientWindow.Show();
-            // Текущее окно (ClientsWindow) не закрывается
         }
 
         private void DeleteClient_Click(object sender, RoutedEventArgs e)
         {
-            // Проверяем, выделен ли клиент в ListBox
             if (ClientsList.SelectedItem is Client selectedClient)
             {
-                // Удаляем клиента из базы данных
                 Helper.Database.Clients.Remove(selectedClient);
                 Helper.Database.SaveChanges();
-
-                // Обновляем список клиентов
                 LoadClients();
+            }
+        }
+
+        private void ClientsList_DoubleTapped(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            if (ClientsList.SelectedItem is Client selectedClient)
+            {
+                var editClientWindow = new AddClientWindow(this, selectedClient);
+                editClientWindow.Show();
             }
         }
     }

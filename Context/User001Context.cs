@@ -32,19 +32,18 @@ public partial class User001Context : DbContext
     {
         modelBuilder.Entity<Admin>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("admins", "Bokking");
+            entity.HasKey(e => e.Id).HasName("admins_pkey");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .UseIdentityAlwaysColumn()
-                .HasColumnName("id");
+            entity.ToTable("admins", "booking");
+
+            entity.HasIndex(e => e.Login, "admins_login_key").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Login)
-                .HasColumnType("character varying")
+                .HasMaxLength(50)
                 .HasColumnName("login");
             entity.Property(e => e.Password)
-                .HasColumnType("character varying")
+                .HasMaxLength(100)
                 .HasColumnName("password");
         });
 
@@ -52,44 +51,62 @@ public partial class User001Context : DbContext
         {
             entity.HasKey(e => e.Id).HasName("bookings_pkey");
 
-            entity.ToTable("bookings", "Bokking");
+            entity.ToTable("bookings", "booking");
+
+            entity.HasIndex(e => e.ClientId, "idx_bookings_client_id");
+
+            entity.HasIndex(e => new { e.StartDate, e.EndDate }, "idx_bookings_dates");
+
+            entity.HasIndex(e => e.RoomId, "idx_bookings_room_id");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Clientid).HasColumnName("clientid");
-            entity.Property(e => e.Enddate)
+            entity.Property(e => e.ClientId).HasColumnName("client_id");
+            entity.Property(e => e.EndDate)
                 .HasColumnType("timestamp without time zone")
-                .HasColumnName("enddate");
-            entity.Property(e => e.Roomid).HasColumnName("roomid");
-            entity.Property(e => e.Startdate)
+                .HasColumnName("end_date");
+            entity.Property(e => e.RoomId).HasColumnName("room_id");
+            entity.Property(e => e.StartDate)
                 .HasColumnType("timestamp without time zone")
-                .HasColumnName("startdate");
+                .HasColumnName("start_date");
             entity.Property(e => e.Status)
-                .HasMaxLength(50)
+                .HasMaxLength(20)
+                .HasDefaultValueSql("'подтверждено'::character varying")
                 .HasColumnName("status");
+
+            entity.HasOne(d => d.Client).WithMany(p => p.Bookings)
+                .HasForeignKey(d => d.ClientId)
+                .HasConstraintName("bookings_client_id_fkey");
+
+            entity.HasOne(d => d.Room).WithMany(p => p.Bookings)
+                .HasForeignKey(d => d.RoomId)
+                .HasConstraintName("bookings_room_id_fkey");
         });
 
         modelBuilder.Entity<Client>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("clients_pkey");
 
-            entity.ToTable("clients", "Bokking");
+            entity.ToTable("clients", "booking");
+
+            entity.HasIndex(e => e.Email, "clients_email_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Email)
-                .HasMaxLength(255)
+                .HasMaxLength(100)
                 .HasColumnName("email");
             entity.Property(e => e.Name)
-                .HasMaxLength(255)
+                .HasMaxLength(100)
                 .HasColumnName("name");
             entity.Property(e => e.Phone)
                 .HasMaxLength(20)
                 .HasColumnName("phone");
-            entity.Property(e => e.Registrationdate)
+            entity.Property(e => e.RegistrationDate)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
-                .HasColumnName("registrationdate");
+                .HasColumnName("registration_date");
             entity.Property(e => e.Status)
-                .HasMaxLength(50)
+                .HasMaxLength(20)
+                .HasDefaultValueSql("'активен'::character varying")
                 .HasColumnName("status");
         });
 
@@ -97,14 +114,17 @@ public partial class User001Context : DbContext
         {
             entity.HasKey(e => e.Id).HasName("rooms_pkey");
 
-            entity.ToTable("rooms", "Bokking");
+            entity.ToTable("rooms", "booking");
+
+            entity.HasIndex(e => e.RoomNumber, "rooms_room_number_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Roomnumber)
-                .HasMaxLength(50)
-                .HasColumnName("roomnumber");
+            entity.Property(e => e.RoomNumber)
+                .HasMaxLength(10)
+                .HasColumnName("room_number");
             entity.Property(e => e.Status)
-                .HasMaxLength(50)
+                .HasMaxLength(10)
+                .HasDefaultValueSql("'свободен'::character varying")
                 .HasColumnName("status");
         });
 

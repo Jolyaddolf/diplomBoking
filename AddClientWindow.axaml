@@ -5,8 +5,9 @@
         mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="600"
         x:Class="Diplom2.AddClientWindow"
         Title="Добавить клиента"
-     
+
 		x:CompileBindings="False">
+	
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -33,7 +34,7 @@
             <ComboBoxItem>Активен</ComboBoxItem>
             <ComboBoxItem>Неактивен</ComboBoxItem>
         </ComboBox>
-
+		<TextBlock Grid.Row="8" Name="ErrorMessageTextBlock" Foreground="Red" Text="" Margin="0,0,0,10" TextWrapping="Wrap"/>
         <StackPanel Grid.Row="10" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
             <Button Content="Сохранить" Margin="0,0,10,0" Click="SaveButton_Click"/>
             <Button Content="Отмена" Click="CancelButton_Click"/>

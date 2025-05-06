@@ -9,6 +9,9 @@
 		<RootNamespace>Diplom2</RootNamespace>
 		<!-- Указываем пространство имен -->
 	</PropertyGroup>
+	<ItemGroup>
+	  <AvaloniaXaml Remove="RoomInfoWindow.axaml" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<!-- Основные зависимости Avalonia -->

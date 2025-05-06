@@ -13,7 +13,9 @@ public partial class Client
 
     public string? Email { get; set; }
 
-    public DateTime Registrationdate { get; set; }
+    public DateTime RegistrationDate { get; set; }
 
     public string Status { get; set; } = null!;
+
+    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 }
